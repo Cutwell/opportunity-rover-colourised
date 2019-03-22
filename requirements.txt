@@ -3,6 +3,6 @@ tensorflow
 requests_html
 opencv-python
 scipy
-PIL
+pillow
 skimage
 numpy
