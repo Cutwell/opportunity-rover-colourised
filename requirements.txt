@@ -1,0 +1,8 @@
+keras
+tensorflow
+requests_html
+opencv-python
+scipy
+PIL
+skimage
+numpy
