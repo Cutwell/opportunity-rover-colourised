@@ -4,5 +4,5 @@ requests_html
 opencv-python
 scipy
 pillow
-skimage
+scikit-image
 numpy
