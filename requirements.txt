@@ -6,3 +6,4 @@ scipy
 pillow
 scikit-image
 numpy
+imutils
