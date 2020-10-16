@@ -7,8 +7,8 @@ import os
 import json
 from urllib.parse import urlparse
 
-if not os.path.exists("colourImages"):
-    os.mkdir("colourImages")
+if not os.path.exists("color"):
+    os.mkdir("color")
 
 # template for getting images
 # camera = "mast"
@@ -44,7 +44,7 @@ for sol in range(start, 1000):
             newFilename = os.path.basename(a.path)
 
             print(f"Found image from {rawImgUrl}")
-            if os.path.isfile(f"colourImages/{newFilename}"):
+            if os.path.isfile(f"color/{newFilename}"):
                 print("Already downloaded, passing")
                 continue
 
@@ -52,7 +52,7 @@ for sol in range(start, 1000):
                 rawImg = session.get(rawImgUrl).content
                 print(rawImgUrl, "downloaded")
 
-                with open(f"colourImages/{newFilename}", "wb") as imageOut:
+                with open(f"color/{newFilename}", "wb") as imageOut:
                     imageOut.write(rawImg)
     
     except KeyError:

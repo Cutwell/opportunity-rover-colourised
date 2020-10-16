@@ -2,17 +2,16 @@
 Take all images from the {imageDir} directory and compile them into a video
 """
 
-from natsort import natsorted
 import cv2
 import os
 
 # Variables to change
 frameRate = 10
-imageDir = "../result"
+imageDir = "../data/opportunity/stitch"
 # - - - - - - - - - -
 
-videoName = f"journey-{frameRate}fps.avi"
-imageNames = natsorted([img for img in os.listdir(imageDir) if img.endswith(".jpg")])
+videoName = f"opportunity-rover-colourised-{frameRate}fps.avi"
+imageNames = sorted([img for img in os.listdir(imageDir) if img.endswith(".png")])
 
 frame = cv2.imread(os.path.join(imageDir, imageNames[0]))
 height, width, layers = frame.shape

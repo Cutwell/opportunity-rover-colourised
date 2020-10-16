@@ -1,0 +1,9 @@
+#untrack images
+.jpg
+.png
+/data/curiosity/color
+/data/curiosity/grey
+/data/opportunity/color
+/data/opportunity/grey
+/data/opportunity/stitch
+/data/model

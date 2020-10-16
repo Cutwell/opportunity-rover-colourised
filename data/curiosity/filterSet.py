@@ -13,10 +13,8 @@ from PIL import Image
 from imutils import paths
 import cv2
 
-if not os.path.exists("filteredImages"):
-    os.mkdir("filteredImages")
 
-directory = os.fsencode("colourImages").decode('ascii')
+directory = os.fsencode("color").decode('ascii')
 
 # threshold for acceptable image blur (above threshold = passing image)
 threshold = 60
@@ -25,7 +23,7 @@ for file in os.listdir(directory):
 
     filename = os.fsdecode(file)
 
-    if filename.endswith(".jpg"):
+    if filename.endswith(".png"):
 
         path = os.path.join(directory, filename)
 
@@ -39,6 +37,7 @@ for file in os.listdir(directory):
 
             if(len(image.shape)<3):
                 print(f"Rejecting: {filename} for reason: greyscale")
+                os.remove(path)
 
             elif len(image.shape)==3:
 
@@ -51,28 +50,30 @@ for file in os.listdir(directory):
                     print(f"Scaling: {filename}")
 
                     # images in dataset must be 1024x1024
-
                     # scale image
                     img = Image.open(path)
                     img = img.resize((1024, 1024), PIL.Image.ANTIALIAS)
 
-                    # save image in new location
-                    img.save(f"filteredImages/{filename}")
+                    # overwrite
+                    img.save(f"{filename}")
 
                     # release memory
                     img.close()
 
                 else:
                     print(f"Rejecting: {filename} for reason: blurry")
+                    os.remove(path)
                 
 
             else:
                 print(f"Rejecting: {filename} for reason: other")
+                os.remove(path)
 
             # release memory
             del image
 
         else:
                 print(f"Rejecting: {filename} for reason: size")
+                os.remove(path)
 
 print("Process end")
