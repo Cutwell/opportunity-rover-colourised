@@ -5,5 +5,9 @@
 /data/curiosity/grey
 /data/opportunity/color
 /data/opportunity/grey
-/data/opportunity/stitch
+/data/opportunity/output
 /data/model
+/.vscode
+/rover-model
+/model
+/tensorboard

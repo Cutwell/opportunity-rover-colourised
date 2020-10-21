@@ -11,32 +11,26 @@ import numpy as np
 import os
 import random
 import tensorflow as tf
+from tensorflow import keras
 
-model = Sequential()
-model.add(InputLayer(input_shape=(64, 64, 1)))
-model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(64, (3, 3), activation='relu', padding='same', strides=2))
-model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(128, (3, 3), activation='relu', padding='same', strides=2))
-model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(256, (3, 3), activation='relu', padding='same', strides=2))
-model.add(Conv2D(512, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
-model.add(UpSampling2D((2, 2)))
-model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
-model.add(UpSampling2D((2, 2)))
-model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(2, (3, 3), activation='tanh', padding='same'))
-model.add(UpSampling2D((2, 2)))
-model.compile(optimizer='rmsprop', loss='mse')
+# load model
+model = keras.models.load_model('/floyd/input/model/model')
+
+# tensorboard tracking
+tensorboard = TensorBoard(log_dir="tensorboard")
 
 # Get images
-directory = os.fsencode("data/curiosity/color/slice").decode('ascii')
-
+directory = "/floyd/input/curiosity"
 super_folder = os.listdir(directory)
 
-for index in range(len(super_folder)):
+max_count = len(super_folder)
+current_count = 0
+
+"""
+Due to a memory leak in tensorflow, the following loop consumes memory each iteration until an out-of-memory error occurs.
+To account for this, we need to train the dataset on 50% of the dataset per job.
+"""
+for index in range(0, 10):
     folder = super_folder[index]
 
     X = []
@@ -71,7 +65,7 @@ for index in range(len(super_folder)):
             yield (X_batch.reshape(X_batch.shape+(1,)), Y_batch)
 
     # Train model
-    model.fit_generator(image_a_b_gen(batch_size), epochs=1, steps_per_epoch=10)
+    model.fit_generator(image_a_b_gen(batch_size), callbacks=[tensorboard], epochs=1, steps_per_epoch=10)
 
     # Test images
     Xtest = rgb2lab(1.0/255*X[split:])[:,:,:,0]
@@ -80,7 +74,12 @@ for index in range(len(super_folder)):
     Ytest = Ytest / 128
     print(model.evaluate(Xtest, Ytest, batch_size=batch_size))
 
+    current_count = index
+    percentage = (current_count / max_count) * 100
+    print(f"Completion: {percentage}%, {current_count} / {max_count}")
+
     del X
 
+
 # Save model
-save_model(model, "data/model/model", save_format='h5')
+model.save("model")
