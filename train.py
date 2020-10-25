@@ -30,7 +30,7 @@ current_count = 0
 Due to a memory leak in tensorflow, the following loop consumes memory each iteration until an out-of-memory error occurs.
 To account for this, we need to train the dataset on 50% of the dataset per job.
 """
-for index in range(0, 10):
+for index in range(3500, 5475):
     folder = super_folder[index]
 
     X = []
@@ -65,7 +65,7 @@ for index in range(0, 10):
             yield (X_batch.reshape(X_batch.shape+(1,)), Y_batch)
 
     # Train model
-    model.fit_generator(image_a_b_gen(batch_size), callbacks=[tensorboard], epochs=1, steps_per_epoch=10)
+    model.fit_generator(image_a_b_gen(batch_size), callbacks=[tensorboard], epochs=10, steps_per_epoch=10)
 
     # Test images
     Xtest = rgb2lab(1.0/255*X[split:])[:,:,:,0]

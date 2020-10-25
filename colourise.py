@@ -14,7 +14,7 @@ import tensorflow as tf
 from tensorflow import keras
 
 # Load the model
-model = keras.models.load_model('"/floyd/input/model/model"')
+model = keras.models.load_model('/floyd/input/model/model')
 
 directory = "/floyd/input/opportunity"
 super_folder = os.listdir(directory)
@@ -25,7 +25,7 @@ current_count = 0
 if not os.path.exists(f"output"):
     os.mkdir(f"output")
 
-for index in range(0, 1):
+for index in range(0, len(super_folder)):
     folder = super_folder[index]
 
     color_me = []

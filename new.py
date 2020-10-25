@@ -18,8 +18,7 @@ import random
 import tensorflow as tf
 
 model = Sequential()
-model.add(InputLayer(input_shape=(64, 64, 1)))
-model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+model.add(Conv2D(64, (3, 3), input_shape=(64, 64, 1), activation='relu', padding='same'))
 model.add(Conv2D(64, (3, 3), activation='relu', padding='same', strides=2))
 model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
 model.add(Conv2D(128, (3, 3), activation='relu', padding='same', strides=2))
@@ -35,5 +34,27 @@ model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
 model.add(Conv2D(2, (3, 3), activation='tanh', padding='same'))
 model.add(UpSampling2D((2, 2)))
 model.compile(optimizer='rmsprop', loss='mse')
+
+# hit model once to set initial layers and weights
+# https://github.com/keras-team/keras/issues/10417
+X = []
+img = load_img(f"/floyd/input/data/init.png")
+arr = img_to_array(img)
+X.append(arr)
+X = np.array(X, dtype=float)
+X = 1.0/255*X
+batch_size = 1
+datagen = ImageDataGenerator(
+        shear_range=0.2,
+        zoom_range=0.2,
+        rotation_range=20,
+        horizontal_flip=True)
+def image_a_b_gen(batch_size):
+    for batch in datagen.flow(X, batch_size=batch_size):
+        lab_batch = rgb2lab(batch)
+        X_batch = lab_batch[:,:,:,0]
+        Y_batch = lab_batch[:,:,:,1:] / 128
+        yield (X_batch.reshape(X_batch.shape+(1,)), Y_batch)
+model.fit_generator(image_a_b_gen(batch_size), epochs=1, steps_per_epoch=1)
 
 model.save("model")

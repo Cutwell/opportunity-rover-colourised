@@ -13,7 +13,6 @@ var
 *.swp
 .DS_Store
 
-/data/curiosity/color
-/data/opportunity/color
-/data/opportunity/grey
-/data/opportunity/stitch
+/data/curiosity
+/data/opportunity
+/data/fix

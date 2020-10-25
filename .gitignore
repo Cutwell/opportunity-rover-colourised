@@ -1,13 +1,16 @@
 #untrack images
 .jpg
 .png
+/data/fix
 /data/curiosity/color
 /data/curiosity/grey
 /data/opportunity/color
 /data/opportunity/grey
 /data/opportunity/output
+/data/opportunity/movie
 /data/model
 /.vscode
 /rover-model
 /model
 /tensorboard
+/data/fix
