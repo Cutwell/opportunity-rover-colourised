@@ -10,6 +10,7 @@ This project made use of the now shutdown FloydHub platform, but other cloud-bas
 ### Dataset collection and filtering
 Collect image data from NASA API:
 > Due to rate limiting, this step may take several hours/days, requiring manual adjustment of the script for collecting new ranges of data, read the script comments first.
+
 ```python3 data/curiosity/getCuriosity.py```
 ```python3 data/opportunity/getOpportunity.py```
 
